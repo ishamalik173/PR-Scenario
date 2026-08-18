@@ -1,0 +1,167 @@
+# AI Feature Review — runs on every PR into `main`.
+#
+# The review is a merge gate: the job's exit code decides whether the PR can
+# land. Findings are posted as a PR comment so the decision is readable, not
+# just red.
+ 
+name: AI Feature Review
+ 
+on:
+  pull_request:
+    branches: [main]
+ 
+jobs:
+  ai-feature-review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+ 
+    steps:
+      - uses: actions/checkout@v4
+ 
+      # The cheap gate. A syntax error is a deterministic defect: the same
+      # character is wrong on every run, and a parser finds it in milliseconds
+      # for free. This site has no build step (CLAUDE.md says so), so without
+      # this nothing parses the script before a browser does.
+      #
+      # continue-on-error, even though this IS a gate: the review below reviews
+      # the same file, and stopping here would mean never seeing what it made of
+      # it. Both outcomes are enforced together in the last step, so nothing is
+      # let through — the failure is just deferred, not forgiven. Running both
+      # is also the point worth showing: the parser answers in a second for
+      # nothing and gives the same answer every time; the model takes a minute,
+      # costs money, and reasons about things a parser cannot see.
+      #
+      # Scope, stated so it is not mistaken for more than it is: --check parses,
+      # it does not resolve names. `functoin f() {}` and an unclosed brace fail
+      # here; `documnet.getElementById(...)` is valid JavaScript and passes. The
+      # review's `typo` category is what covers the rest.
+      - name: Check JavaScript syntax
+        id: syntax
+        continue-on-error: true
+        run: node --check site/scripts.js
+ 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+ 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+ 
+      # The Python SDK does not bundle the agent it drives: it locates a
+      # `claude` binary on PATH via shutil.which() and spawns it. pip alone
+      # leaves the runner without one, and the review dies at spawn with a
+      # reviewer failure (exit 2) that looks nothing like its real cause.
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+ 
+      - name: Verify the CLI is on PATH
+        run: claude --version
+ 
+      # Every PR gets a FRESH session (D5). Nothing carries over from the run
+      # that reviewed the previous commit, so there is no prior reasoning to be
+      # anchored by — the reviewer re-reads the code from scratch each time.
+      #
+      # --mode ci selects: setting_sources=[] (no discovery), standards injected
+      # into the system prompt, read-only tools, JSON output.
+      #
+      # continue-on-error so the findings get posted even when the gate fails;
+      # the gate is re-applied in the last step.
+      - name: Run AI Feature Review
+        id: review
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        continue-on-error: true
+        run: |
+          python review_cli.py \
+            --feature landing_page \
+            --mode ci \
+            --format json \
+            --out review-output.json
+ 
+      - name: Post findings as a PR comment
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            if (!fs.existsSync('review-output.json')) {
+              core.warning('No review-output.json — the reviewer did not produce a report.');
+              return;
+            }
+            const out = JSON.parse(fs.readFileSync('review-output.json', 'utf8'));
+            const findings = out.findings || [];
+            const blocking = out.blocking || [];
+ 
+            let body = '## AI Feature Review\n\n';
+ 
+            if (!out.ok) {
+              body += `⚠️ **The reviewer itself failed:** \`${out.error}\`\n\n`
+                    + 'This is not a verdict on the code. Check the workflow logs.\n';
+            } else if (blocking.length === 0) {
+              body += '✅ No blocking issues found.\n';
+            } else {
+              body += `❌ **${blocking.length} blocking issue(s)** — security or logic at high/critical:\n\n`;
+              for (const f of blocking) {
+                body += `- **${f.category}** (${f.severity}) in \`${f.file}:${f.line}\` — ${f.summary}\n`;
+              }
+            }
+ 
+            body += '\n### All findings\n\n';
+            if (findings.length === 0) {
+              body += 'None above the reporting threshold.\n';
+            } else {
+              body += '| File | Line | Category | Severity | Summary |\n';
+              body += '|---|---|---|---|---|\n';
+              for (const f of findings) {
+                body += `| \`${f.file}\` | ${f.line} | ${f.category} | ${f.severity} | ${f.summary} |\n`;
+              }
+            }
+ 
+            // Denied tool calls are evidence, not noise: they show the secret
+            // exclusion working at the tool layer rather than on trust.
+            if ((out.denied_calls || []).length) {
+              body += '\n### Denied tool calls\n\n';
+              for (const d of out.denied_calls) {
+                body += `- \`${d.tool}(${d.input})\` — ${d.reason}\n`;
+              }
+            }
+ 
+            body += `\n<sub>tools used: ${(out.tools_used || []).join(', ') || 'none'}`
+                  + ` · ${out.turns} turns · ${out.wall_clock_s}s · exit ${out.exit_code}</sub>`;
+ 
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body,
+            });
+ 
+      - name: Upload review JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-review-output
+          path: review-output.json
+          if-no-files-found: warn
+ 
+      # The merge gate. Exit codes are distinct on purpose:
+      #   0 = clean          1 = blocking findings          2 = reviewer failed
+      # Collapsing 1 and 2 is how teams learn to ignore a red pipeline.
+      #
+      # Either gate failing blocks the merge, and the log says which — a red
+      # check that does not name its own cause sends people hunting through
+      # job output for it.
+      - name: Enforce review outcome
+        if: steps.syntax.outcome == 'failure' || steps.review.outcome == 'failure'
+        run: |
+          if [ "${{ steps.syntax.outcome }}" = "failure" ]; then
+            echo "site/scripts.js does not parse. See the 'Check JavaScript syntax' step."
+          fi
+          if [ "${{ steps.review.outcome }}" = "failure" ]; then
+            echo "AI Feature Review did not pass. See the PR comment above."
+          fi
+          exit 1

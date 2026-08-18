@@ -1,0 +1,7 @@
+workshop.jpg
+  Source:  Unsplash — https://unsplash.com/photos/18bbc8c9d7d1
+  License: Unsplash License (free to use, no attribution required)
+  Cropped to 720x360.
+
+Committed to the repo rather than hotlinked, so the page renders with no
+network. Swap the file and the page picks it up; no markup change needed.

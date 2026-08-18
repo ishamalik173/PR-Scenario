@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inkwell — a blog about building things</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="scripts.js"></script>
+</head>
+<body>
+
+  <header class="site-header">
+    <a class="brand" href="/">Inkwell</a>
+    <button id="nav-toggle" class="nav-toggle">Menu</button>
+    <nav id="site-nav">
+      <a href="#featured">Featured</a>
+      <a href="#posts">Posts</a>
+      <a href="#about">About</a>
+      <a href="#subscribe">Subscribe</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p id="welcome-banner" class="welcome"></p>
+      <h1>Notes on building things that last</h1>
+      <p class="hero-sub">Short essays on software, craft, and the unglamorous parts of shipping.</p>
+      <a class="cta" href="#subscribe" onclick="trackClick('hero-cta')">Get the next one by email</a>
+    </section>
+
+    <section id="featured" class="featured">
+      <h2>Featured</h2>
+      <article class="featured-card">
+        <img src="images/workshop.jpg" width="720" height="360">
+        <div>
+          <h3>The workshop, not the workbench</h3>
+          <p>Teams optimise the tool in front of them and ignore the room it sits in.
+             A year of small frictions costs more than the rewrite everyone argues about.</p>
+          <a href="#">Read more</a>
+        </div>
+      </article>
+    </section>
+
+    <section id="posts" class="posts">
+      <h2>Recent posts</h2>
+      <p id="post-count" class="meta"></p>
+
+      <article class="post-card">
+        <h3>The cost of a fast first draft</h3>
+        <p>Speed early is borrowed from somewhere. Usually from the person who maintains it next.</p>
+        <p class="meta">12 Feb 2026 · 6 min</p>
+        <a href="#">Read more</a>
+      </article>
+
+      <article class="post-card">
+        <h3>Why your tests pass and your users don't</h3>
+        <p>A green suite proves the code does what you told it to. Nothing more.</p>
+        <p class="meta">28 Jan 2026 · 9 min</p>
+        <a href="#">Read more</a>
+      </article>
+
+      <article class="post-card">
+        <h3>Small tools, sharp edges</h3>
+        <p>The best internal tool is the one nobody has to be trained on.</p>
+        <p class="meta">9 Jan 2026 · 4 min</p>
+        <a href="#">Read more</a>
+      </article>
+    </section>
+
+    <section id="about" class="about">
+      <h2>About the blog</h2>
+      <p>Inkwell is written by one person, irregularly, and edited less than it should be.
+         It has been going since 2021 and has never once kept to a schedule.</p>
+      <p>Archives and older essays live on
+         <a href="https://example.com/inkwell-archive" target="_blank" rel="noopener">the old archive site</a>.</p>
+    </section>
+
+    <section id="subscribe" class="subscribe">
+      <h2>Newsletter</h2>
+      <p>One essay a month. No roundups, no "hey friends", no tracking pixels.</p>
+      <form id="newsletter-form">
+        <input id="newsletter-email" type="email" placeholder="you@example.com">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p id="newsletter-status" class="status"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 Inkwell. All rights     reserved.</p>
+  </footer>
+
+</body>
+</html>

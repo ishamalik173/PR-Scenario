@@ -1,0 +1,213 @@
+/* Inkwell — landing page styles. */
+
+:root {
+  --ink: #1c1c1c;
+  --paper: #fdfcf9;
+  --muted: #5a5a5a;
+  --rule: #e2ded4;
+  --accent: #7a4b2a;
+  --accent-soft: #f3ece3;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.6 Georgia, "Iowan Old Style", serif;
+}
+
+main { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem; }
+
+img { max-width: 100%; height: auto; }
+
+/* header */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.site-header nav a {
+  margin-left: 1rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.site-header nav a:hover { color: var(--accent); }
+
+.nav-toggle {
+  display: none;
+  padding: 0.4rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+/* hero */
+
+.hero { padding: 3.5rem 0 2.5rem; }
+
+.welcome:empty { display: none; }
+
+.welcome {
+  display: inline-block;
+  margin: 0 0 1rem;
+  padding: 0.35rem 0.75rem;
+  background: var(--accent-soft);
+  border-radius: 999px;
+  font-size: 0.875rem;
+}
+
+.hero h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2.5rem;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.hero-sub {
+  margin: 0 0 1.75rem;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.cta {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  background: var(--accent);
+  border-radius: 4px;
+  color: #fff;
+  font-size: 1rem;
+  text-decoration: none;
+}
+
+.cta:hover { background: #61391f; }
+
+/* section headings */
+
+.featured h2, .posts h2, .about h2, .subscribe h2 {
+  font-size: 0.8125rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.5rem;
+}
+
+/* featured */
+
+.featured { padding-top: 1rem; }
+
+.featured-card { padding: 1.5rem 0 2rem; }
+
+.featured-card img {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.featured-card h3 { margin: 0 0 0.5rem; font-size: 1.6rem; }
+
+.featured-card p { margin: 0 0 0.75rem; color: var(--muted); }
+
+.featured-card a { color: var(--accent); }
+
+/* posts */
+
+.post-card { padding: 1.25rem 0; border-bottom: 1px solid var(--rule); }
+
+.post-card h3 { margin: 0 0 0.35rem; font-size: 1.25rem; }
+
+.post-card p { margin: 0 0 0.5rem; color: var(--muted); }
+
+.post-card a { color: var(--accent); }
+
+.meta {
+  color: #b9b3a6;
+  font-size: 0.8125rem;
+}
+
+/* about */
+
+.about { padding: 2.5rem 0; }
+
+.about a { color: var(--accent); }
+
+/* subscribe */
+
+.subscribe { padding-bottom: 3rem; }
+
+.subscribe p { color: var(--muted); }
+
+#newsletter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+#newsletter-email {
+  flex: 1 1 16rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  font: inherit;
+}
+
+#newsletter-form button {
+  padding: 0.65rem 1.25rem;
+  background: var(--ink);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.status { min-height: 1.5rem; font-size: 0.9375rem; }
+
+/* footer */
+
+.site-footer {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+  border-top: 1px solid var(--rule);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* narrow screens */
+
+@media (max-width: 40rem) {
+  .hero h1 { font-size: 2rem; }
+
+  .nav-toggle { display: block; }
+
+  .site-header { flex-wrap: wrap; }
+
+  #site-nav { display: none; width: 100%; }
+
+  #site-nav.open { display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .site-header nav a { margin-left: 0; }
+}

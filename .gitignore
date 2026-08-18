@@ -1,0 +1,17 @@
+# NOTE: `.env` is deliberately NOT ignored here — it is a committed demo
+# fixture with fake values, used to show permissions.deny blocking a Read.
+# Anything that could hold a real credential still is:
+.env.local
+.env.*.local
+*.pem
+*.key
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+review-output.json
+
+.DS_Store
+Thumbs.db
