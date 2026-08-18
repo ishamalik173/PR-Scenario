@@ -5,7 +5,7 @@
     python compare_tools.py --show-options         # settings only, no API call
 
 The same refactoring job, run twice against the same code, with the same tools
-available. Only one thing changes between the two runs: the wording of the MCP
+available. Only one thngs changes between the two runs: the wording of the MCP
 tool descriptions.
 
     vague     "Extracts a function from code."
