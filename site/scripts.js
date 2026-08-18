@@ -10,7 +10,7 @@ if (welcome) {
     'Welcome back, ' + welcome + '!';
 }
 
-// Mobile menu.
+// Mobiles menu.
 var toggle = document.getElementById('nav-toggle');
 toggle.addEventListener('click', function () {
   document.getElementById('site-nav').classList.toggle('open');
