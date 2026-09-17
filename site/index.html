@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Inkwell — a blog about building things</title>
   <link rel="stylesheet" href="styles.css">
-  <script src="scripts.js"></script>
 </head>
 <body>
 
@@ -25,7 +24,7 @@
       <p id="welcome-banner" class="welcome"></p>
       <h1>Notes on building things that last</h1>
       <p class="hero-sub">Short essays on software, craft, and the unglamorous parts of shipping.</p>
-      <a class="cta" href="#subscribe" onclick="trackClick('hero-cta')">Get the next one by email</a>
+      <a class="cta" id="hero-cta" href="#subscribe">Get the next one by email</a>
     </section>
 
     <section id="featured" class="featured">
@@ -90,5 +89,6 @@
     <p>&copy; 2026 Inkwell. All rights     reserved.</p>
   </footer>
 
+  <script src="scripts.js"></script>
 </body>
 </html>

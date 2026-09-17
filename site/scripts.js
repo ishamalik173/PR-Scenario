@@ -44,6 +44,13 @@ function trackClick(label) {
   console.log('clicked', label);
 }
 
+var heroCta = document.getElementById('hero-cta');
+if (heroCta) {
+  heroCta.addEventListener('click', function () {
+    trackClick('hero-cta');
+  });
+}
+
 // Show how many posts are listed, under the "Recent posts" heading.
 var cards = document.querySelectorAll('.post-card');
 document.getElementById('post-count').textContent = cards.length + ' posts';
