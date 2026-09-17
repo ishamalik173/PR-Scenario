@@ -18,7 +18,7 @@ toggle.addEventListener('click', function () {
 
 // Newsletter signup.
 var form = document.getElementById('newsletter-form');
-var status = document.getElementById('newsletter-status')
+var status = document.getElementById('newsletter-status');
 
 form.addEventListener('submit', function (event) {
   event.preventDefault();
@@ -42,6 +42,13 @@ function subscribe(email) {
 
 function trackClick(label) {
   console.log('clicked', label);
+}
+
+var heroCta = document.getElementById('hero-cta');
+if (heroCta) {
+  heroCta.addEventListener('click', function () {
+    trackClick('hero-cta');
+  });
 }
 
 // Show how many posts are listed, under the "Recent posts" heading.
