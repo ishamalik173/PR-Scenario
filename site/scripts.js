@@ -18,7 +18,7 @@ toggle.addEventListener('click', function () {
 
 // Newsletter signup.
 var form = document.getElementById('newsletter-form');
-var status = document.getElementById('newsletter-status');
+var status = document.getElementById('newsletter-status')
 
 form.addEventListener('submit', function (event) {
   event.preventDefault();
