@@ -24,7 +24,7 @@ form.addEventListener('submit', function (event) {
   event.preventDefault();
   var email = document.getElementById('newsletter-email').value;
 
-  if (email.indexOf('@') == -1) {
+  if (email.indexOf('@') !== -1) {
     status.textContent = 'Thanks! Check your inbox to confirm.';
     subscribe(email);
   } else {
