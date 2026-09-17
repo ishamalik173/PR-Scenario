@@ -6,7 +6,7 @@ var welcome = params.get('welcome');
 if (welcome) {
   // textContent, not innerHTML: the value comes from the URL, so anything
   // that renders it as markup is an XSS sink.
-  document.getElementById('welcome-banner').innerHTML =
+  document.getElementById('welcome-banner').textContent =
     'Welcome back, ' + welcome + '!';
 }
 
